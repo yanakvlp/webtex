@@ -69,6 +69,11 @@
   </style>
 </head>
 <body>
+
+  <button id="startTraversal" style="position:fixed; top:10px; left:10px; z-index:1000;">
+    Навигация по DOM
+  </button>
+    
   <div class="container">
     <h1>Ульяновська Юлія Вікторівна</h1>
     <div class="subtitle">
@@ -120,5 +125,66 @@
 
     <a href="mailto:yuliyauyv@gmail.com" class="email-button">Write SMS</a>
   </div>
+  
+  <script>
+    function traverseDOM(node, callback) {
+      callback(node, function(action) {
+        if (action === 'next') {
+          const child = node.firstElementChild || node.nextElementSibling;
+          if (child) {
+            traverseDOM(child, callback);
+          } else {
+            alert("Дальше идти некуда.");
+          }
+        } else if (action === 'back') {
+          const parent = node.parentElement;
+          if (parent) {
+            traverseDOM(parent, callback);
+          } else {
+            alert("Вы на корневом элементе.");
+          }
+        } else {
+          alert("Выход из навигации.");
+        }
+      });
+    }
+
+    function startTraversal() {
+      const root = document.documentElement;
+
+      function nodeCallback(currentNode, nextStep) {
+        const content = currentNode.tagName || currentNode.nodeName;
+        let message = Вы находитесь в узле: <${content.toLowerCase()}>\n;
+
+        let options = "Хотите перейти:\n1. Дальше\n2. Назад\n3. Завершить";
+        if (!currentNode.firstElementChild && !currentNode.nextElementSibling) {
+          options = "Это нижний узел.\n1. Назад\n2. Завершить";
+        }
+
+        const choice = prompt(message + options);
+
+        if (choice === '1') {
+          if (!currentNode.firstElementChild && !currentNode.nextElementSibling) {
+            nextStep('back');
+          } else {
+            nextStep('next');
+          }
+        } else if (choice === '2') {
+          if (!currentNode.firstElementChild && !currentNode.nextElementSibling) {
+            nextStep('exit');
+          } else {
+            nextStep('back');
+          }
+        } else {
+          nextStep('exit');
+        }
+      }
+
+      traverseDOM(root, nodeCallback);
+    }
+
+    document.getElementById('startTraversal').addEventListener('click', startTraversal);
+  </script>
 </body>
+  
 </html>
