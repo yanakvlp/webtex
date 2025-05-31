@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>MVC: Ульяновська Юлія Вікторівна</title>
+  <style>
+    body {
+      background-color: white;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 30px;
+    }
+
+    h1 {
+      color: #222;
+    }
+
+    .section-title {
+      font-weight: bold;
+      margin-top: 20px;
+      font-size: 18px;
+      color: #444;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    .email-button {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #007BFF;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      margin-top: 20px;
+    }
+
+    #startTraversal {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      z-index: 1000;
+    }
+
+    .profile-photo {
+      max-width: 250px;
+      float: right;
+      margin: 0 0 20px 20px;
+      border-radius: 10px;
+    }
+
+    .mvc-info {
+      background-color: #f5f5f5;
+      border-left: 4px solid #007BFF;
+      padding: 15px 20px;
+      margin: 20px 0;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <button id="startTraversal">Навігація по DOM</button>
+
+  <!-- Інформаційний блок про MVC -->
+  <div class="mvc-info">
+    <p><strong>Ця сторінка реалізована за патерном MVC (Model-View-Controller):</strong></p>
+    <ul>
+      <li><strong>Model</strong> — зберігає інформацію про викладача.</li>
+      <li><strong>View</strong> — відповідає за виведення даних на сторінку.</li>
+      <li><strong>Controller</strong> — ініціалізує відображення та керує логікою взаємодії.</li>
+    </ul>
+  </div>
+
+  <div class="container" id="profile"></div>
+
+  <script>
+    // === MODEL ===
+    // Зберігає всі дані про викладача
+    const model = {
+      name: "Ульяновська Юлія Вікторівна",
+      updated: "16 серпня 2021 року",
+      views: 5827,
+      position: "завідувачка кафедри комп’ютерних наук та інженерії програмного забезпечення, доцент, кандидат технічних наук.",
+      photo: "ulyanovska.jpg",
+      education: [
+        "1997 — Дніпропетровський національний університет, кваліфікація: математик і викладач математики.",
+        "2005 — кандидат технічних наук, тема: «Моделі та методи обробки даних в автоматизованій інформаційній системі митної служби»."
+      ],
+      subjects: [
+        "Комп'ютерна дискретна математика",
+        "Сучасні методи теорії інформації та кодування",
+        "Теорія алгоритмів",
+        "Теорія прийняття рішень",
+        "Інтелектуальні системи підтримки прийняття рішень",
+        "Методи та системи штучного інтелекту"
+      ],
+      interests: [
+        "Інтелектуальні автоматизовані системи",
+        "Нечіткі, фрагментарні та неповні дані",
+        "AI в управлінських системах"
+      ],
+      email: ["yuliyauyv@gmail.com", "ulyanovska@umsf.dp.ua"]
+    };
+
+    // === VIEW ===
+    // Відповідає за візуалізацію даних на сторінці
+    function renderView(data) {
+      const container = document.getElementById('profile');
+      container.innerHTML = `
+        <img src="${data.photo}" alt="Фото" class="profile-photo">
+        <h1>${data.name}</h1>
+        <p><em>Дата оновлення:</em> ${data.updated} <br> <em>Переглядів:</em> ${data.views}</p>
+        <p><strong>Посада:</strong> ${data.position}</p>
+
+        <p class="section-title">Освіта та наукові здобутки:</p>
+        <ul>${data.education.map(e => `<li>${e}</li>`).join('')}</ul>
+
+        <p class="section-title">Викладацька діяльність:</p>
+        <ul>${data.subjects.map(s => `<li>${s}</li>`).join('')}</ul>
+
+        <p class="section-title">Наукові інтереси:</p>
+        <ul>${data.interests.map(i => `<li>${i}</li>`).join('')}</ul>
+
+        <p class="section-title">Контакти:</p>
+        <ul>${data.email.map(e => `<li><a href="mailto:${e}">${e}</a></li>`).join('')}</ul>
+
+        <a href="mailto:${data.email[0]}" class="email-button">Write SMS</a>
+      `;
+    }
+
+    // === CONTROLLER ===
+    // Контролер: ініціалізує відображення та логіку DOM-навігації
+    function initController() {
+      renderView(model);
+
+      document.getElementById('startTraversal').addEventListener('click', () => {
+        traverseDOM(document.body, nodeCallback);
+      });
+    }
+
+    // === DOM Navigation ===
+    // Рекурсивна навігація по вузлах DOM
+    function traverseDOM(node, callback) {
+      callback(node, function(action) {
+        let nextNode;
+        if (action === 'next') {
+          if (node.firstElementChild) {
+            nextNode = node.firstElementChild;
+          } else {
+            let temp = node;
+            while (temp && !temp.nextElementSibling) {
+              temp = temp.parentElement;
+            }
+            nextNode = temp ? temp.nextElementSibling : null;
+          }
+
+          if (nextNode) {
+            traverseDOM(nextNode, callback);
+          } else {
+            alert("Це останній вузол. Навігація завершена.");
+          }
+
+        } else if (action === 'back') {
+          if (node.parentElement) {
+            traverseDOM(node.parentElement, callback);
+          } else {
+            alert("Ви вже на кореневому вузлі.");
+          }
+
+        } else {
+          alert("Навігацію завершено.");
+        }
+      });
+    }
+
+    // === Callback для обробки вузлів ===
+    function nodeCallback(currentNode, nextStep) {
+      const tag = currentNode.tagName ? currentNode.tagName.toLowerCase() : currentNode.nodeName;
+      let message = `Ви зараз у вузлі: <${tag}>`;
+      let options;
+
+      if (currentNode.firstElementChild || currentNode.nextElementSibling) {
+        options = "1 — Далі\n2 — Назад\n3 — Вихід";
+      } else {
+        options = "1 — Назад\n2 — Вихід";
+      }
+
+      const choice = prompt(message + "\nОберіть дію:\n" + options);
+
+      if (choice === '1') {
+        if (currentNode.firstElementChild || currentNode.nextElementSibling) {
+          nextStep('next');
+        } else {
+          nextStep('back');
+        }
+      } else if (choice === '2') {
+        nextStep('back');
+      } else {
+        nextStep('exit');
+      }
+    }
+
+    // === Запуск Controller ===
+    initController();
+  </script>
+</body>
+</html>
+
