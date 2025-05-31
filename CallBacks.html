@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Ульяновська Юлія Вікторівна</title>
+  <style>
+    body {
+      background-color: white;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 30px;
+    }
+
+    img {
+      max-width: 300px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    h1 {
+      color: #222;
+      font-size: 28px;
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-weight: bold;
+      margin-top: 20px;
+      font-size: 18px;
+      color: #444;
+    }
+
+    p, li {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #333;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    .email-button {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #007BFF;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      margin-top: 20px;
+    }
+
+    .email-button:hover {
+      background-color: #0056b3;
+    }
+
+    #startTraversal {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+
+  <button id="startTraversal">Навигация по DOM</button>
+
+  <div class="container">
+    <h1>Ульяновська Юлія Вікторівна</h1>
+    <div class="subtitle">
+      Дата оновлення: 16 серпня 2021 року <br>
+      Кількість переглядів: 5827
+    </div>
+
+    <img src="ulyanovska.jpg" alt="Ульяновська Юлія Вікторівна">
+
+    <p><strong>Посада:</strong> завідувачка кафедри комп’ютерних наук та інженерії програмного забезпечення, доцент, кандидат технічних наук.</p>
+
+    <p class="section-title">Освіта та наукові здобутки:</p>
+    <p>У 1997 році Юлія Вікторівна завершила навчання у Дніпропетровському національному університеті, здобувши кваліфікацію математика та викладача математики.</p>
+    <p>У 2005 році їй було присуджено науковий ступінь кандидата технічних наук за спеціальністю 05.13.06 – «Автоматизовані системи управління та прогресивні інформаційні технології». Темою кандидатської дисертації стала: «Моделі та методи обробки даних в єдиній автоматизованій інформаційній системі митної служби».</p>
+
+    <p class="section-title">Викладацька діяльність:</p>
+    <ul>
+      <li>Комп'ютерна дискретна математика</li>
+      <li>Сучасні методи теорії інформації та кодування</li>
+      <li>Теорія алгоритмів</li>
+      <li>Теорія прийняття рішень</li>
+      <li>Інтелектуальні системи підтримки прийняття рішень</li>
+      <li>Методи та системи штучного інтелекту</li>
+    </ul>
+
+    <p class="section-title">Наукові інтереси:</p>
+    <ul>
+      <li>Розробка та дослідження інтелектуальних автоматизованих систем</li>
+      <li>Методи обробки нечітких, фрагментарних та неповних даних</li>
+      <li>Застосування технологій штучного інтелекту в управлінських та інформаційних системах</li>
+    </ul>
+
+    <p class="section-title">Науковий профіль:</p>
+    <p>Google Scholar: [Посилання відсутнє – потрібно уточнити]</p>
+
+    <p class="section-title">Електронна пошта:</p>
+    <p>yuliyauyv@gmail.com<br>ulyanovska@umsf.dp.ua</p>
+
+    <p class="section-title">Організаційна та громадська діяльність:</p>
+    <ul>
+      <li>З 2018 року – виконувачка обов’язків завідувачки кафедри інформаційних систем та технологій Університету митної справи та фінансів</li>
+      <li>З 2019 року – завідувачка кафедри комп’ютерних наук та інженерії програмного забезпечення</li>
+      <li>У 2018 році – заступниця відповідального секретаря приймальної комісії (Наказ № 34 від 20.02.2018 р.)</li>
+      <li>Червень 2018 – член журі конкурсу «День острова Токто»</li>
+      <li>У 2019 році – заступниця відповідального секретаря приймальної комісії (Наказ № 174 від 04.12.2019 р.)</li>
+      <li>З 2021 року – кураторка академічної групи К 21-1м</li>
+      <li>З 2022 року – кураторка груп К 22-1м та К 22-2м</li>
+    </ul>
+
+    <a href="mailto:yuliyauyv@gmail.com" class="email-button">Write SMS</a>
+  </div>
+
+  <script>
+    function traverseDOM(node, callback) {
+      callback(node, function(action) {
+        let nextNode;
+        if (action === 'next') {
+          if (node.firstElementChild) {
+            nextNode = node.firstElementChild;
+          } else {
+            let temp = node;
+            while (temp && !temp.nextElementSibling) {
+              temp = temp.parentElement;
+            }
+            nextNode = temp ? temp.nextElementSibling : null;
+          }
+
+          if (nextNode) {
+            traverseDOM(nextNode, callback);
+          } else {
+            alert("Це останній вузол. Навігація завершена.");
+          }
+
+        } else if (action === 'back') {
+          if (node.parentElement) {
+            traverseDOM(node.parentElement, callback);
+          } else {
+            alert("Ви вже на кореневому вузлі.");
+          }
+
+        } else {
+          alert("Навігацію завершено.");
+        }
+      });
+    }
+
+    function startTraversal() {
+      const root = document.body;
+
+      function nodeCallback(currentNode, nextStep) {
+        const tag = currentNode.tagName ? currentNode.tagName.toLowerCase() : currentNode.nodeName;
+        let message = `Ви зараз у вузлі: <${tag}>
+`;
+        let options;
+
+        if (currentNode.firstElementChild || currentNode.nextElementSibling) {
+          options = "1 — Далі\n2 — Назад\n3 — Вихід";
+        } else {
+          options = "1 — Назад\n2 — Вихід";
+        }
+
+        const choice = prompt(message + "Оберіть дію:\n" + options);
+
+        if (choice === '1') {
+          if (currentNode.firstElementChild || currentNode.nextElementSibling) {
+            nextStep('next');
+          } else {
+            nextStep('back');
+          }
+        } else if (choice === '2') {
+          if (currentNode.firstElementChild || currentNode.nextElementSibling) {
+            nextStep('back');
+          } else {
+            nextStep('exit');
+          }
+        } else {
+          nextStep('exit');
+        }
+      }
+
+      document.getElementById('startTraversal').addEventListener('click', () => {
+        traverseDOM(document.body, nodeCallback);
+      });
+    }
+
+    document.getElementById('startTraversal').addEventListener('click', startTraversal);
+  </script>
+</body>
+</html>
